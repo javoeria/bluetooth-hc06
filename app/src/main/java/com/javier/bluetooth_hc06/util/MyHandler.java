@@ -60,12 +60,13 @@ public class MyHandler extends Handler {
                         room.reload();
                     }
                     count++;
-                    if (count == 3) {
+                    if (count >= 6) {
                         new BigQueryTask(parent.getApplicationContext()).execute();
                         count = 0;
                         msg("Updated");
                     }
                 } catch (Throwable t) {
+                    Log.d("Main", "Throwable: " + t.getMessage());
                     msg("Error");
                 }
                 break;

@@ -86,6 +86,7 @@ public class DeviceActivity extends AppCompatActivity {
                             try {
                                 btSocket.close();
                             } catch(IOException e) {
+                                Log.d("Main", "IOException: " + e.getMessage());
                                 msg("Error");
                             }
                         }
@@ -135,9 +136,11 @@ public class DeviceActivity extends AppCompatActivity {
                     btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
                     myBluetooth.cancelDiscovery();
                     btSocket.connect();
+                    btSocket.getOutputStream().write("00".getBytes());
                     connected = true;
                 }
             } catch (IOException e) {
+                Log.d("Main", "IOException: " + e.getMessage());
                 connected = false;
             }
             return null;
@@ -163,7 +166,7 @@ public class DeviceActivity extends AppCompatActivity {
                     byte[] buffer = new byte[1024];
                     int bytes;
 
-                    while ( btSocket != null ) {
+                    while (btSocket.isConnected()) {
                         try {
                             String readMessage = "";
                             while(!readMessage.contains("}")) {
@@ -172,6 +175,7 @@ public class DeviceActivity extends AppCompatActivity {
                             }
                             mHandlerThread.sendMessage(Message.obtain(mHandlerThread, MyHandler.UPDATE_ALL, readMessage));
                         } catch (IOException e) {
+                            Log.d("Main", "IOException: " + e.getMessage());
                             break;
                         }
                     }

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -82,6 +83,7 @@ public class RoomActivity extends AppCompatActivity {
             try {
                 btSocket.getOutputStream().write((room + number).getBytes());
             } catch (IOException e) {
+                Log.d("Main", "IOException: " + e.getMessage());
                 msg("Error");
             }
         }
@@ -90,8 +92,8 @@ public class RoomActivity extends AppCompatActivity {
 
     public void reload() {
         Room model = RoomSingleton.getInstance().getRoom(room);
-        textView.setText(model.getTemperature()+"ºC");
-        textView2.setText(model.getHumidity()+"%");
+        textView.setText(model.getTemperature() + "ºC");
+        textView2.setText(model.getHumidity() + "%");
         imageView.setImageResource(R.drawable.ic_lightbulb_outline_black_48dp);
         imageView2.setImageResource(R.drawable.ic_person_black_48dp);
         imageView3.setImageResource(R.drawable.ic_volume_up_black_48dp);

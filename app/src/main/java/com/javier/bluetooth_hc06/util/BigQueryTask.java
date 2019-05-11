@@ -47,15 +47,13 @@ public class BigQueryTask extends AsyncTask<String, Integer, String> {
                     .formatOptions(FormatOptions.json())
                     .build();
             WriteChannel channel = bigquery.writer(configuration);
-
-            Log.d("Main", "Sending JSON: " + JSON_CONTENT);
             num = channel.write(ByteBuffer.wrap(JSON_CONTENT.getBytes(StandardCharsets.UTF_8)));
             Log.d("Main", "Loading " + num + " bytes into table " + tableId);
             channel.close();
         } catch (IOException e) {
-            Log.d("Main", "Exception: " + e.toString());
+            Log.d("Main", "IOException: " + e.getMessage());
         }
-        return "Done";
+        return null;
     }
 
     @Override

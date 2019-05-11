@@ -1,5 +1,7 @@
 package com.javier.bluetooth_hc06.util;
 
+import android.util.Log;
+
 import com.google.api.client.util.DateTime;
 
 import org.json.JSONException;
@@ -72,7 +74,7 @@ public class RoomSingleton {
             }
             json.put("date", new DateTime(new Date()));
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("Main", "JSONException: " + e.getMessage());
         }
         return json;
     }
