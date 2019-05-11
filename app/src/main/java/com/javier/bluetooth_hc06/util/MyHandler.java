@@ -18,6 +18,7 @@ public class MyHandler extends Handler {
     public static final int UPDATE_C = 3;
     private DeviceActivity parent;
     private RoomActivity room;
+    private int count = 0;
 
     public MyHandler(DeviceActivity parent) {
         super();
@@ -58,7 +59,12 @@ public class MyHandler extends Handler {
                     if (room != null) {
                         room.reload();
                     }
-                    msg("Updated");
+                    count++;
+                    if (count == 3) {
+                        new BigQueryTask(parent.getApplicationContext()).execute();
+                        count = 0;
+                        msg("Updated");
+                    }
                 } catch (Throwable t) {
                     msg("Error");
                 }

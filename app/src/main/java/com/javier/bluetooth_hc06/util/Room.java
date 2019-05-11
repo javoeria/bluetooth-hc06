@@ -17,6 +17,7 @@ public class Room {
         this.humidity = humidity;
         this.light = light;
         this.presence = presence;
+        this.music = music;
         this.alarm = alarm;
     }
 

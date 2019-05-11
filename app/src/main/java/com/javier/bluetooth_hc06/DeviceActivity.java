@@ -29,11 +29,9 @@ import java.util.UUID;
 public class DeviceActivity extends AppCompatActivity {
 
     private String address = "";
-    private boolean isBtConnected = false;
     protected static BluetoothSocket btSocket = null;
     protected static MyHandler mHandlerThread;
     public static final String EXTRA_ROOM = "device_room";
-    public static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,26 +116,29 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {
+        private final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+        private boolean connected = false;
         private ProgressDialog progress;
-        private boolean connectSuccess = true;
 
         @Override
         protected void onPreExecute() {
+            super.onPreExecute();
             progress = ProgressDialog.show(DeviceActivity.this, "Connecting...", "Please Wait");
         }
 
         @Override
         protected Void doInBackground(Void... devices) {
             try {
-                if ( btSocket==null || !isBtConnected ) {
+                if ( btSocket==null || !connected ) {
                     BluetoothAdapter myBluetooth = BluetoothAdapter.getDefaultAdapter();
                     BluetoothDevice device = myBluetooth.getRemoteDevice(address);
                     btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
                     myBluetooth.cancelDiscovery();
                     btSocket.connect();
+                    connected = true;
                 }
             } catch (IOException e) {
-                connectSuccess = false;
+                connected = false;
             }
             return null;
         }
@@ -145,12 +146,11 @@ public class DeviceActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (!connectSuccess) {
+            if (!connected) {
                 msg("Connection Failed. Try again");
                 finish();
             } else {
                 msg("Connected");
-                isBtConnected = true;
                 receiveData();
             }
             progress.dismiss();
