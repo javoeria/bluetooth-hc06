@@ -31,10 +31,9 @@ public class DeviceActivity extends AppCompatActivity {
     private String address = "";
     private boolean isBtConnected = false;
     protected static BluetoothSocket btSocket = null;
+    protected static MyHandler mHandlerThread;
     public static final String EXTRA_ROOM = "device_room";
     public static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private MyHandler mHandlerThread;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +139,6 @@ public class DeviceActivity extends AppCompatActivity {
             } catch (IOException e) {
                 connectSuccess = false;
             }
-
             return null;
         }
 
@@ -150,7 +148,6 @@ public class DeviceActivity extends AppCompatActivity {
             if (!connectSuccess) {
                 msg("Connection Failed. Try again");
                 finish();
-                // isBtConnected = true;
             } else {
                 msg("Connected");
                 isBtConnected = true;
@@ -173,8 +170,7 @@ public class DeviceActivity extends AppCompatActivity {
                                 bytes = btSocket.getInputStream().read(buffer);
                                 readMessage += new String(buffer, 0, bytes);
                             }
-                            Log.d("Main", readMessage);
-                            mHandlerThread.sendMessage(Message.obtain(mHandlerThread, MyHandler.UPDATE_MSG, readMessage));
+                            mHandlerThread.sendMessage(Message.obtain(mHandlerThread, MyHandler.UPDATE_ALL, readMessage));
                         } catch (IOException e) {
                             break;
                         }

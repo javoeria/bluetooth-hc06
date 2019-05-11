@@ -46,13 +46,12 @@ public class RoomActivity extends AppCompatActivity {
         room = getIntent().getStringExtra(DeviceActivity.EXTRA_ROOM);
         getSupportActionBar().setTitle("ROOM " + room);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        DeviceActivity.mHandlerThread.setRoom(this);
 
-        CardView btn1 = findViewById(R.id.cardView);
-        CardView btn2 = findViewById(R.id.cardView2);
-        CardView btn3 = findViewById(R.id.cardView3);
-        CardView btn4 = findViewById(R.id.cardView4);
-        CardView btn5 = findViewById(R.id.cardView5);
-        CardView btn6 = findViewById(R.id.cardView6);
+        CardView btn1 = findViewById(R.id.cardView3);
+        CardView btn2 = findViewById(R.id.cardView4);
+        CardView btn3 = findViewById(R.id.cardView5);
+        CardView btn4 = findViewById(R.id.cardView6);
 
         textView = findViewById(R.id.textView);
         textView2 = findViewById(R.id.textView2);
@@ -90,29 +89,9 @@ public class RoomActivity extends AppCompatActivity {
                 sendSignal("4");
             }
         });
-
-        btn5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal("5");
-            }
-        });
-
-        btn6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal("6");
-            }
-        });
     }
 
     private void sendSignal(String number) {
-        Room model = RoomSingleton.getInstance().getRoom(room);
-        model.setTemperature(model.getTemperature()+1);
-        model.setHumidity(model.getHumidity()+1);
-        RoomSingleton.getInstance().setRoom(room, model);
-        reload();
-
         msg(room + "_" + number);
         if ( btSocket != null ) {
             try {
@@ -121,13 +100,13 @@ public class RoomActivity extends AppCompatActivity {
                 msg("Error");
             }
         }
+        //reload();
     }
 
-    private void reload() {
+    public void reload() {
         Room model = RoomSingleton.getInstance().getRoom(room);
-
-        textView.setText(String.valueOf(model.getTemperature())+"ºC");
-        textView2.setText(String.valueOf(model.getHumidity())+"%");
+        textView.setText(model.getTemperature()+"ºC");
+        textView2.setText(model.getHumidity()+"%");
         imageView.setImageResource(R.drawable.ic_lightbulb_outline_black_48dp);
         imageView2.setImageResource(R.drawable.ic_person_black_48dp);
         imageView3.setImageResource(R.drawable.ic_volume_up_black_48dp);
@@ -193,7 +172,7 @@ public class RoomActivity extends AppCompatActivity {
 
                 Log.d("Main", "Sending JSON: " + JSON_CONTENT);
                 num = channel.write(ByteBuffer.wrap(JSON_CONTENT.getBytes(StandardCharsets.UTF_8)));
-                Log.d("Main", "Loading " + Integer.toString(num) + " bytes into table " + tableId);
+                Log.d("Main", "Loading " + num + " bytes into table " + tableId);
                 channel.close();
             } catch (Exception e) {
                 Log.d("Main", "Exception: " + e.toString());
