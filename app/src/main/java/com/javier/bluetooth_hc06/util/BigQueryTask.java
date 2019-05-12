@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class BigQueryTask extends AsyncTask<String, Integer, String> {
-    private Context context;
+    private final Context context;
 
     public BigQueryTask(Context context) {
         this.context = context;

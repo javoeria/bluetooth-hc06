@@ -16,7 +16,7 @@ public class MyHandler extends Handler {
     public static final int UPDATE_A = 1;
     public static final int UPDATE_B = 2;
     public static final int UPDATE_C = 3;
-    private DeviceActivity parent;
+    private final DeviceActivity parent;
     private RoomActivity room;
     private int count = 0;
 

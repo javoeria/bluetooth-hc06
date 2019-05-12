@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 public class DeviceActivity extends AppCompatActivity {
@@ -86,7 +87,7 @@ public class DeviceActivity extends AppCompatActivity {
     private void setWeatherIcon() {
         WeatherIconView weatherIconView = findViewById(R.id.my_weather_icon);
         Date d = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("HH");
+        SimpleDateFormat format = new SimpleDateFormat("HH", Locale.getDefault());
         int hour = Integer.valueOf(format.format(d));
         if (hour > 7 && hour <= 11) {
             weatherIconView.setIconResource(getString(R.string.wi_day_sunny_overcast));
@@ -161,12 +162,12 @@ public class DeviceActivity extends AppCompatActivity {
 
                     while (btSocket.isConnected()) {
                         try {
-                            String readMessage = "";
-                            while(!readMessage.contains("}")) {
+                            StringBuilder readMessage = new StringBuilder();
+                            while(!readMessage.toString().contains("}")) {
                                 bytes = btSocket.getInputStream().read(buffer);
-                                readMessage += new String(buffer, 0, bytes);
+                                readMessage.append(new String(buffer, 0, bytes));
                             }
-                            mHandlerThread.sendMessage(Message.obtain(mHandlerThread, MyHandler.UPDATE_ALL, readMessage));
+                            mHandlerThread.sendMessage(Message.obtain(mHandlerThread, MyHandler.UPDATE_ALL, readMessage.toString()));
                         } catch (IOException e) {
                             Log.d("Main", "IOException: " + e.getMessage());
                             break;

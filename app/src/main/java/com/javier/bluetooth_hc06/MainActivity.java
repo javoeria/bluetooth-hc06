@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         deviceList.setOnItemClickListener(myListClickListener);
     }
 
-    private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
+    private final AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String info = ((TextView) view).getText().toString();
