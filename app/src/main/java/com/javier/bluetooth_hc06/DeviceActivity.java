@@ -5,41 +5,37 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.javier.bluetooth_hc06.util.MyAdapter;
 import com.javier.bluetooth_hc06.util.MyHandler;
 import com.javier.bluetooth_hc06.util.Room;
 import com.javier.bluetooth_hc06.util.RoomSingleton;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 public class DeviceActivity extends AppCompatActivity {
 
     private String address = "";
+    private MyAdapter adapter;
     protected static BluetoothSocket btSocket = null;
     protected static MyHandler mHandlerThread;
     public static final String EXTRA_ROOM = "device_room";
-    private TextView textA1, textA2, textB1, textB2, textC1, textC2;
-    private ImageView imageA1, imageA2, imageA3, imageA4, imageA5, imageA6;
-    private ImageView imageB1, imageB2, imageB3, imageB4, imageB5, imageB6;
-    private ImageView imageC1, imageC2, imageC3, imageC4, imageC5, imageC6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,67 +47,15 @@ public class DeviceActivity extends AppCompatActivity {
         new ConnectBT().execute();
         mHandlerThread = new MyHandler(this);
 
-        ImageButton btnA = findViewById(R.id.imageButton);
-        ImageButton btnB = findViewById(R.id.imageButton2);
-        ImageButton btnC = findViewById(R.id.imageButton3);
-
-        textA1 = findViewById(R.id.textViewA1);
-        textA2 = findViewById(R.id.textViewA2);
-        imageA1 = findViewById(R.id.imageViewA1);
-        imageA2 = findViewById(R.id.imageViewA2);
-        imageA3 = findViewById(R.id.imageViewA3);
-        imageA4 = findViewById(R.id.imageViewA4);
-        imageA5 = findViewById(R.id.imageViewA5);
-        imageA6 = findViewById(R.id.imageViewA6);
-
-        textB1 = findViewById(R.id.textViewB1);
-        textB2 = findViewById(R.id.textViewB2);
-        imageB1 = findViewById(R.id.imageViewB1);
-        imageB2 = findViewById(R.id.imageViewB2);
-        imageB3 = findViewById(R.id.imageViewB3);
-        imageB4 = findViewById(R.id.imageViewB4);
-        imageB5 = findViewById(R.id.imageViewB5);
-        imageB6 = findViewById(R.id.imageViewB6);
-
-        textC1 = findViewById(R.id.textViewC1);
-        textC2 = findViewById(R.id.textViewC2);
-        imageC1 = findViewById(R.id.imageViewC1);
-        imageC2 = findViewById(R.id.imageViewC2);
-        imageC3 = findViewById(R.id.imageViewC3);
-        imageC4 = findViewById(R.id.imageViewC4);
-        imageC5 = findViewById(R.id.imageViewC5);
-        imageC6 = findViewById(R.id.imageViewC6);
-
-        reload("A");
-        reload("B");
-        reload("C");
-
-        btnA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                enterRoom("A");
-            }
-        });
-
-        btnB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                enterRoom("B");
-            }
-        });
-
-        btnC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                enterRoom("C");
-            }
-        });
-    }
-
-    private void enterRoom(String room) {
-        Intent i = new Intent(DeviceActivity.this, RoomActivity.class);
-        i.putExtra(EXTRA_ROOM, room);
-        startActivity(i);
+        ArrayList<Room> rooms = new ArrayList<>();
+        rooms.add(RoomSingleton.getInstance().getRoom("A"));
+        rooms.add(RoomSingleton.getInstance().getRoom("B"));
+        rooms.add(RoomSingleton.getInstance().getRoom("C"));
+        adapter = new MyAdapter(rooms);
+        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     private void disconnect() {
@@ -157,89 +101,11 @@ public class DeviceActivity extends AppCompatActivity {
 
     public void reload(String room) {
         if (room.equals("A")) {
-            reloadA();
+            adapter.notifyItemChanged(0);
         } else if (room.equals("B")) {
-            reloadB();
+            adapter.notifyItemChanged(1);
         } else {
-            reloadC();
-        }
-    }
-
-    private void reloadA() {
-        Room modelA = RoomSingleton.getInstance().getRoom("A");
-        textA1.setText(modelA.getTemperature() + "ºC");
-        textA2.setText(modelA.getHumidity() + "%");
-        if (modelA.isLight()) {
-            imageA3.setImageResource(R.drawable.light_on_96);
-        } else {
-            imageA3.setImageResource(R.drawable.light_off_96);
-        }
-        if (modelA.isPresence()) {
-            imageA4.setImageResource(R.drawable.presence_on_96);
-        } else {
-            imageA4.setImageResource(R.drawable.presence_off_96);
-        }
-        if (modelA.isMusic()) {
-            imageA5.setImageResource(R.drawable.music_on_96);
-        } else {
-            imageA5.setImageResource(R.drawable.music_off_96);
-        }
-        if (modelA.isAlarm()) {
-            imageA6.setImageResource(R.drawable.alarm_on_96);
-        } else {
-            imageA6.setImageResource(R.drawable.alarm_off_96);
-        }
-    }
-
-    private void reloadB() {
-        Room modelB = RoomSingleton.getInstance().getRoom("B");
-        textB1.setText(modelB.getTemperature() + "ºC");
-        textB2.setText(modelB.getHumidity() + "%");
-        if (modelB.isLight()) {
-            imageB3.setImageResource(R.drawable.light_on_96);
-        } else {
-            imageB3.setImageResource(R.drawable.light_off_96);
-        }
-        if (modelB.isPresence()) {
-            imageB4.setImageResource(R.drawable.presence_on_96);
-        } else {
-            imageB4.setImageResource(R.drawable.presence_off_96);
-        }
-        if (modelB.isMusic()) {
-            imageB5.setImageResource(R.drawable.music_on_96);
-        } else {
-            imageB5.setImageResource(R.drawable.music_off_96);
-        }
-        if (modelB.isAlarm()) {
-            imageB6.setImageResource(R.drawable.alarm_on_96);
-        } else {
-            imageB6.setImageResource(R.drawable.alarm_off_96);
-        }
-    }
-
-    private void reloadC() {
-        Room modelC = RoomSingleton.getInstance().getRoom("C");
-        textC1.setText(modelC.getTemperature() + "ºC");
-        textC2.setText(modelC.getHumidity() + "%");
-        if (modelC.isLight()) {
-            imageC3.setImageResource(R.drawable.light_on_96);
-        } else {
-            imageC3.setImageResource(R.drawable.light_off_96);
-        }
-        if (modelC.isPresence()) {
-            imageC4.setImageResource(R.drawable.presence_on_96);
-        } else {
-            imageC4.setImageResource(R.drawable.presence_off_96);
-        }
-        if (modelC.isMusic()) {
-            imageC5.setImageResource(R.drawable.music_on_96);
-        } else {
-            imageC5.setImageResource(R.drawable.music_off_96);
-        }
-        if (modelC.isAlarm()) {
-            imageC6.setImageResource(R.drawable.alarm_on_96);
-        } else {
-            imageC6.setImageResource(R.drawable.alarm_off_96);
+            adapter.notifyItemChanged(2);
         }
     }
 

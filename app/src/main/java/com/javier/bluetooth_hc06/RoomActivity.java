@@ -137,6 +137,7 @@ public class RoomActivity extends AppCompatActivity {
             case R.id.refresh_menu:
                 try {
                     btSocket.getOutputStream().write("00".getBytes());
+                    msg("Refresh");
                 } catch (IOException e) {
                     Log.d("Main", "IOException: " + e.getMessage());
                 }

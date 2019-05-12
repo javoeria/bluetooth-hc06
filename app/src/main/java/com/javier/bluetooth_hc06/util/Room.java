@@ -3,7 +3,9 @@ package com.javier.bluetooth_hc06.util;
 public class Room {
 
     private int temperature = 0;
+    private int old_temperature = 0;
     private int humidity = 0;
+    private int old_humidity = 0;
     private boolean light = false;
     private boolean presence = false;
     private boolean music = false;
@@ -25,7 +27,12 @@ public class Room {
         return temperature;
     }
 
+    public int getOldTemperature() {
+        return old_temperature;
+    }
+
     public void setTemperature(int temperature) {
+        this.old_temperature = this.temperature;
         this.temperature = temperature;
     }
 
@@ -33,7 +40,12 @@ public class Room {
         return humidity;
     }
 
+    public int getOldHumidity() {
+        return old_humidity;
+    }
+
     public void setHumidity(int humidity) {
+        this.old_humidity = this.humidity;
         this.humidity = humidity;
     }
 
