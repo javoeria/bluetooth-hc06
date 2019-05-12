@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -94,10 +95,26 @@ public class RoomActivity extends AppCompatActivity {
         Room model = RoomSingleton.getInstance().getRoom(room);
         textView.setText(model.getTemperature() + "ºC");
         textView2.setText(model.getHumidity() + "%");
-        imageView.setImageResource(R.drawable.ic_lightbulb_outline_black_48dp);
-        imageView2.setImageResource(R.drawable.ic_person_black_48dp);
-        imageView3.setImageResource(R.drawable.ic_volume_up_black_48dp);
-        imageView4.setImageResource(R.drawable.ic_alarm_black_48dp);
+        if (model.isLight()) {
+            imageView.setImageResource(R.drawable.light_on_96);
+        } else {
+            imageView.setImageResource(R.drawable.light_off_96);
+        }
+        if (model.isPresence()) {
+            imageView2.setImageResource(R.drawable.presence_on_96);
+        } else {
+            imageView2.setImageResource(R.drawable.presence_off_96);
+        }
+        if (model.isMusic()) {
+            imageView3.setImageResource(R.drawable.music_on_96);
+        } else {
+            imageView3.setImageResource(R.drawable.music_off_96);
+        }
+        if (model.isAlarm()) {
+            imageView4.setImageResource(R.drawable.alarm_on_96);
+        } else {
+            imageView4.setImageResource(R.drawable.alarm_off_96);
+        }
     }
 
     private void msg(String s) {
@@ -105,10 +122,23 @@ public class RoomActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.room_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.refresh_menu:
+                try {
+                    btSocket.getOutputStream().write("00".getBytes());
+                } catch (IOException e) {
+                    Log.d("Main", "IOException: " + e.getMessage());
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
