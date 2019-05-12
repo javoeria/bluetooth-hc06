@@ -59,6 +59,7 @@ public class MyHandler extends Handler {
                     if (room != null) {
                         room.reload();
                     }
+                    parent.reload(letter);
                     count++;
                     if (count >= 6) {
                         new BigQueryTask(parent.getApplicationContext()).execute();
@@ -82,7 +83,6 @@ public class MyHandler extends Handler {
             default:
                 super.handleMessage(msg);
         }
-
     }
 
     private void msg(String s) {

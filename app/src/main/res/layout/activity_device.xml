@@ -51,28 +51,106 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="0dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:padding="8dp"
             android:background="@color/colorBackground"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="ROOM A"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="ROOM A"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/textViewA1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="20ºC"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewA1"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="12dp"
+                        app:srcCompat="@drawable/ic_arrow_upward_green_600_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewA2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:text="70%"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewA2"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_arrow_downward_red_600_24dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageViewA3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/light_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewA4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/presence_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewA5"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/music_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewA6"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/alarm_on_96" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/imageButton"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
@@ -83,28 +161,106 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="0dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:padding="8dp"
             android:background="@color/colorBackground"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="ROOM B"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="ROOM B"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/textViewB1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="20ºC"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewB1"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="12dp"
+                        app:srcCompat="@drawable/ic_arrow_upward_green_600_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewB2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:text="70%"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewB2"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_arrow_downward_red_600_24dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageViewB3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/light_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewB4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/presence_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewB5"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/music_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewB6"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/alarm_on_96" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/imageButton2"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
@@ -115,28 +271,106 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="0dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:padding="8dp"
             android:background="@color/colorBackground"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="ROOM C"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="ROOM C"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/textViewC1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="20ºC"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewC1"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="12dp"
+                        app:srcCompat="@drawable/ic_arrow_upward_green_600_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewC2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:text="70%"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewC2"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_arrow_downward_red_600_24dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageViewC3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/light_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewC4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/presence_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewC5"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/music_on_96" />
+
+                    <ImageView
+                        android:id="@+id/imageViewC6"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/alarm_on_96" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/imageButton3"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_chevron_right_black_24dp" />

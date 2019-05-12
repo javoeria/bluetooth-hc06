@@ -16,10 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.javier.bluetooth_hc06.util.MyHandler;
+import com.javier.bluetooth_hc06.util.Room;
+import com.javier.bluetooth_hc06.util.RoomSingleton;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -32,6 +36,10 @@ public class DeviceActivity extends AppCompatActivity {
     protected static BluetoothSocket btSocket = null;
     protected static MyHandler mHandlerThread;
     public static final String EXTRA_ROOM = "device_room";
+    private TextView textA1, textA2, textB1, textB2, textC1, textC2;
+    private ImageView imageA1, imageA2, imageA3, imageA4, imageA5, imageA6;
+    private ImageView imageB1, imageB2, imageB3, imageB4, imageB5, imageB6;
+    private ImageView imageC1, imageC2, imageC3, imageC4, imageC5, imageC6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,37 @@ public class DeviceActivity extends AppCompatActivity {
         ImageButton btnA = findViewById(R.id.imageButton);
         ImageButton btnB = findViewById(R.id.imageButton2);
         ImageButton btnC = findViewById(R.id.imageButton3);
+
+        textA1 = findViewById(R.id.textViewA1);
+        textA2 = findViewById(R.id.textViewA2);
+        imageA1 = findViewById(R.id.imageViewA1);
+        imageA2 = findViewById(R.id.imageViewA2);
+        imageA3 = findViewById(R.id.imageViewA3);
+        imageA4 = findViewById(R.id.imageViewA4);
+        imageA5 = findViewById(R.id.imageViewA5);
+        imageA6 = findViewById(R.id.imageViewA6);
+
+        textB1 = findViewById(R.id.textViewB1);
+        textB2 = findViewById(R.id.textViewB2);
+        imageB1 = findViewById(R.id.imageViewB1);
+        imageB2 = findViewById(R.id.imageViewB2);
+        imageB3 = findViewById(R.id.imageViewB3);
+        imageB4 = findViewById(R.id.imageViewB4);
+        imageB5 = findViewById(R.id.imageViewB5);
+        imageB6 = findViewById(R.id.imageViewB6);
+
+        textC1 = findViewById(R.id.textViewC1);
+        textC2 = findViewById(R.id.textViewC2);
+        imageC1 = findViewById(R.id.imageViewC1);
+        imageC2 = findViewById(R.id.imageViewC2);
+        imageC3 = findViewById(R.id.imageViewC3);
+        imageC4 = findViewById(R.id.imageViewC4);
+        imageC5 = findViewById(R.id.imageViewC5);
+        imageC6 = findViewById(R.id.imageViewC6);
+
+        reload("A");
+        reload("B");
+        reload("C");
 
         btnA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +152,94 @@ public class DeviceActivity extends AppCompatActivity {
             weatherIconView.setIconResource(getString(R.string.wi_day_cloudy));
         } else {
             weatherIconView.setIconResource(getString(R.string.wi_night_clear));
+        }
+    }
+
+    public void reload(String room) {
+        if (room.equals("A")) {
+            reloadA();
+        } else if (room.equals("B")) {
+            reloadB();
+        } else {
+            reloadC();
+        }
+    }
+
+    private void reloadA() {
+        Room modelA = RoomSingleton.getInstance().getRoom("A");
+        textA1.setText(modelA.getTemperature() + "ºC");
+        textA2.setText(modelA.getHumidity() + "%");
+        if (modelA.isLight()) {
+            imageA3.setImageResource(R.drawable.light_on_96);
+        } else {
+            imageA3.setImageResource(R.drawable.light_off_96);
+        }
+        if (modelA.isPresence()) {
+            imageA4.setImageResource(R.drawable.presence_on_96);
+        } else {
+            imageA4.setImageResource(R.drawable.presence_off_96);
+        }
+        if (modelA.isMusic()) {
+            imageA5.setImageResource(R.drawable.music_on_96);
+        } else {
+            imageA5.setImageResource(R.drawable.music_off_96);
+        }
+        if (modelA.isAlarm()) {
+            imageA6.setImageResource(R.drawable.alarm_on_96);
+        } else {
+            imageA6.setImageResource(R.drawable.alarm_off_96);
+        }
+    }
+
+    private void reloadB() {
+        Room modelB = RoomSingleton.getInstance().getRoom("B");
+        textB1.setText(modelB.getTemperature() + "ºC");
+        textB2.setText(modelB.getHumidity() + "%");
+        if (modelB.isLight()) {
+            imageB3.setImageResource(R.drawable.light_on_96);
+        } else {
+            imageB3.setImageResource(R.drawable.light_off_96);
+        }
+        if (modelB.isPresence()) {
+            imageB4.setImageResource(R.drawable.presence_on_96);
+        } else {
+            imageB4.setImageResource(R.drawable.presence_off_96);
+        }
+        if (modelB.isMusic()) {
+            imageB5.setImageResource(R.drawable.music_on_96);
+        } else {
+            imageB5.setImageResource(R.drawable.music_off_96);
+        }
+        if (modelB.isAlarm()) {
+            imageB6.setImageResource(R.drawable.alarm_on_96);
+        } else {
+            imageB6.setImageResource(R.drawable.alarm_off_96);
+        }
+    }
+
+    private void reloadC() {
+        Room modelC = RoomSingleton.getInstance().getRoom("C");
+        textC1.setText(modelC.getTemperature() + "ºC");
+        textC2.setText(modelC.getHumidity() + "%");
+        if (modelC.isLight()) {
+            imageC3.setImageResource(R.drawable.light_on_96);
+        } else {
+            imageC3.setImageResource(R.drawable.light_off_96);
+        }
+        if (modelC.isPresence()) {
+            imageC4.setImageResource(R.drawable.presence_on_96);
+        } else {
+            imageC4.setImageResource(R.drawable.presence_off_96);
+        }
+        if (modelC.isMusic()) {
+            imageC5.setImageResource(R.drawable.music_on_96);
+        } else {
+            imageC5.setImageResource(R.drawable.music_off_96);
+        }
+        if (modelC.isAlarm()) {
+            imageC6.setImageResource(R.drawable.alarm_on_96);
+        } else {
+            imageC6.setImageResource(R.drawable.alarm_off_96);
         }
     }
 
