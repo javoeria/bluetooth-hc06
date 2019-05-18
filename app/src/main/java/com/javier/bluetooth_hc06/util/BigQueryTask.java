@@ -31,10 +31,7 @@ public class BigQueryTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String JSON_CONTENT = RoomSingleton.getInstance().getJSON("A") + "\r\n"
-                + RoomSingleton.getInstance().getJSON("B") + "\r\n"
-                + RoomSingleton.getInstance().getJSON("C");
-        int num = 0;
+        String JSON_CONTENT = params[0];
         try {
             InputStream isCredentialsFile = context.getAssets().open("Data-bb1b288f9cfa.json");
             BigQuery bigquery = BigQueryOptions.newBuilder()
@@ -47,8 +44,8 @@ public class BigQueryTask extends AsyncTask<String, Integer, String> {
                     .setFormatOptions(FormatOptions.json())
                     .build();
             WriteChannel channel = bigquery.writer(configuration);
-            num = channel.write(ByteBuffer.wrap(JSON_CONTENT.getBytes(StandardCharsets.UTF_8)));
-            Log.d("Main", "Loading " + num + " bytes into table " + tableId);
+            int num = channel.write(ByteBuffer.wrap(JSON_CONTENT.getBytes(StandardCharsets.UTF_8)));
+            Log.d("Main", "Loading " + num + " bytes into table " + tableId.getTable());
             channel.close();
         } catch (IOException e) {
             Log.d("Main", "IOException: " + e.getMessage());

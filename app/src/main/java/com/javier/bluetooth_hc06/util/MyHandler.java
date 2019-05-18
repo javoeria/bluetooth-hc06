@@ -19,6 +19,7 @@ public class MyHandler extends Handler {
     private final DeviceActivity parent;
     private RoomActivity room;
     private int count = 0;
+    private String rows = "";
 
     public MyHandler(DeviceActivity parent) {
         super();
@@ -61,10 +62,14 @@ public class MyHandler extends Handler {
                     }
                     parent.reload(letter);
                     count++;
-                    if (count >= 6) {
-                        new BigQueryTask(parent.getApplicationContext()).execute();
+                    if (count >= 12) {
+                        rows += RoomSingleton.getInstance().getJSON(letter);
+                        new BigQueryTask(parent.getApplicationContext()).execute(rows);
                         count = 0;
+                        rows = "";
                         msg("Updated");
+                    } else {
+                        rows += RoomSingleton.getInstance().getJSON(letter) + "\r\n";
                     }
                 } catch (Throwable t) {
                     Log.d("Main", "Throwable: " + t.getMessage());
