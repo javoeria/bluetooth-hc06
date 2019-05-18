@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.cloud.AuthCredentials;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryOptions;
@@ -37,14 +37,14 @@ public class BigQueryTask extends AsyncTask<String, Integer, String> {
         int num = 0;
         try {
             InputStream isCredentialsFile = context.getAssets().open("Data-bb1b288f9cfa.json");
-            BigQuery bigquery = BigQueryOptions.builder()
-                    .authCredentials(AuthCredentials.createForJson(isCredentialsFile))
-                    .projectId("data-234914")
-                    .build().service();
+            BigQuery bigquery = BigQueryOptions.newBuilder()
+                    .setCredentials(GoogleCredentials.fromStream(isCredentialsFile))
+                    .setProjectId("data-234914")
+                    .build().getService();
 
             TableId tableId = TableId.of("android_app", "test");
-            WriteChannelConfiguration configuration = WriteChannelConfiguration.builder(tableId)
-                    .formatOptions(FormatOptions.json())
+            WriteChannelConfiguration configuration = WriteChannelConfiguration.newBuilder(tableId)
+                    .setFormatOptions(FormatOptions.json())
                     .build();
             WriteChannel channel = bigquery.writer(configuration);
             num = channel.write(ByteBuffer.wrap(JSON_CONTENT.getBytes(StandardCharsets.UTF_8)));
