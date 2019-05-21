@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +25,16 @@ import com.javier.bluetooth_hc06.util.Room;
 import com.javier.bluetooth_hc06.util.RoomSingleton;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public class DeviceActivity extends AppCompatActivity {
 
@@ -130,7 +136,7 @@ public class DeviceActivity extends AppCompatActivity {
                     btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
                     myBluetooth.cancelDiscovery();
                     btSocket.connect();
-                    btSocket.getOutputStream().write("00".getBytes());
+                    btSocket.getOutputStream().write(hmac("00").getBytes());
                     connected = true;
                 }
             } catch (IOException e) {
@@ -199,5 +205,23 @@ public class DeviceActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         disconnect();
+    }
+
+    private String hmac(String str) {
+        String base64 = "";
+        try {
+            String key = BuildConfig.secret;
+            Mac hasher = Mac.getInstance("HmacSHA256");
+            hasher.init(new SecretKeySpec(key.getBytes(), "HmacSHA256"));
+
+            byte[] hash = hasher.doFinal(str.getBytes());
+            base64 = Base64.encodeToString(hash, android.util.Base64.DEFAULT);
+            Log.d("Main", base64);
+        } catch (NoSuchAlgorithmException e) {
+            Log.d("Main", "Exception: " + e.getMessage());
+        } catch (InvalidKeyException e) {
+            Log.d("Main", "Exception: " + e.getMessage());
+        }
+        return base64.trim();
     }
 }

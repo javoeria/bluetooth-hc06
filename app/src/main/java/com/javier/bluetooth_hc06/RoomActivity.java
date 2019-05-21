@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,11 @@ import com.javier.bluetooth_hc06.util.Room;
 import com.javier.bluetooth_hc06.util.RoomSingleton;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public class RoomActivity extends AppCompatActivity {
 
@@ -82,7 +88,8 @@ public class RoomActivity extends AppCompatActivity {
         msg(room + "_" + number);
         if ( btSocket != null ) {
             try {
-                btSocket.getOutputStream().write((room + number).getBytes());
+                String message = hmac(room + number);
+                btSocket.getOutputStream().write(message.getBytes());
             } catch (IOException e) {
                 Log.d("Main", "IOException: " + e.getMessage());
                 msg("Error");
@@ -136,7 +143,7 @@ public class RoomActivity extends AppCompatActivity {
                 return true;
             case R.id.refresh_menu:
                 try {
-                    btSocket.getOutputStream().write("00".getBytes());
+                    btSocket.getOutputStream().write(hmac("00").getBytes());
                     msg("Refresh");
                 } catch (IOException e) {
                     Log.d("Main", "IOException: " + e.getMessage());
@@ -145,5 +152,23 @@ public class RoomActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private String hmac(String str) {
+        String base64 = "";
+        try {
+            String key = BuildConfig.secret;
+            Mac hasher = Mac.getInstance("HmacSHA256");
+            hasher.init(new SecretKeySpec(key.getBytes(), "HmacSHA256"));
+
+            byte[] hash = hasher.doFinal(str.getBytes());
+            base64 = Base64.encodeToString(hash, android.util.Base64.DEFAULT);
+            Log.d("Main", base64);
+        } catch (NoSuchAlgorithmException e) {
+            Log.d("Main", "Exception: " + e.getMessage());
+        } catch (InvalidKeyException e) {
+            Log.d("Main", "Exception: " + e.getMessage());
+        }
+        return base64.trim();
     }
 }

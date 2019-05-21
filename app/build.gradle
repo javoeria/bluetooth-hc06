@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def secretPropertiesFile = rootProject.file("secret.properties");
+def secretProperties = new Properties()
+secretProperties.load(new FileInputStream(secretPropertiesFile))
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -9,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "secret", secretProperties['secret'])
     }
     buildTypes {
         release {
