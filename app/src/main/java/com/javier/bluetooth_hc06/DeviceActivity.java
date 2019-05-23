@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.javier.bluetooth_hc06.util.MyAdapter;
 import com.javier.bluetooth_hc06.util.MyHandler;
 import com.javier.bluetooth_hc06.util.Room;
@@ -27,10 +26,7 @@ import com.javier.bluetooth_hc06.util.RoomSingleton;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 import javax.crypto.Mac;
@@ -50,7 +46,6 @@ public class DeviceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_device);
 
         address = getIntent().getStringExtra(MainActivity.EXTRA_ADDRESS);
-        setWeatherIcon();
         new ConnectBT().execute();
         mHandlerThread = new MyHandler(this);
 
@@ -90,21 +85,6 @@ public class DeviceActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
 
-    private void setWeatherIcon() {
-        WeatherIconView weatherIconView = findViewById(R.id.my_weather_icon);
-        Date d = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("HH", Locale.getDefault());
-        int hour = Integer.valueOf(format.format(d));
-        if (hour > 7 && hour <= 11) {
-            weatherIconView.setIconResource(getString(R.string.wi_day_sunny_overcast));
-        } else if (hour > 11 && hour <= 18) {
-            weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
-        } else if (hour > 18 && hour <= 22) {
-            weatherIconView.setIconResource(getString(R.string.wi_day_cloudy));
-        } else {
-            weatherIconView.setIconResource(getString(R.string.wi_night_clear));
-        }
-    }
 
     public void reload(String room) {
         if (room.equals("A")) {

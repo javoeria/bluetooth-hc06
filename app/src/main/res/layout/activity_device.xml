@@ -21,15 +21,17 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_home_black_48dp" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:lottie_rawRes="@raw/bars"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
                 android:text="HOME"
                 android:textAlignment="center"
@@ -37,13 +39,12 @@
                 android:textColor="@android:color/black"
                 android:textSize="40sp" />
 
-            <com.github.pwittchen.weathericonview.WeatherIconView
-                android:id="@+id/my_weather_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:weatherIconResource="@string/wi_day_sunny_overcast"
-                app:weatherIconColor="@android:color/black"
-                app:weatherIconSize="48" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:lottie_rawRes="@raw/weather"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true" />
 
         </LinearLayout>
 
