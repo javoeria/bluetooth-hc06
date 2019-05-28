@@ -1,36 +1,51 @@
 package com.javier.bluetooth_hc06;
 
+import android.Manifest;
+import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyPermanentlyInvalidatedException;
+import android.security.keystore.KeyProperties;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Set;
+import com.javier.bluetooth_hc06.util.FingerprintHandler;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListView deviceList;
-    private BluetoothAdapter myBluetooth = null;
     public static final String EXTRA_ADDRESS = "device_address";
+    private static final String KEY_NAME = "fingerprint";
+    private KeyStore keyStore;
+    private Cipher cipher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnPaired = findViewById(R.id.button);
-        deviceList = findViewById(R.id.listView);
-
-        myBluetooth = BluetoothAdapter.getDefaultAdapter();
+        TextView textView = findViewById(R.id.errorText);
+        BluetoothAdapter myBluetooth = BluetoothAdapter.getDefaultAdapter();
         if ( myBluetooth == null ) {
             Toast.makeText(getApplicationContext(), "Bluetooth device not available", Toast.LENGTH_LONG).show();
             finish();
@@ -39,41 +54,82 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(turnBTon, 1);
         }
 
-        pairedDevicesList();
-        btnPaired.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pairedDevicesList();
-            }
-        });
-    }
+        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
 
-    private void pairedDevicesList() {
-        Set<BluetoothDevice> pairedDevices = myBluetooth.getBondedDevices();
-        ArrayList list = new ArrayList();
-
-        if ( pairedDevices.size() > 0 ) {
-            for ( BluetoothDevice bt : pairedDevices ) {
-                list.add(bt.getName() + "\n" + bt.getAddress());
-            }
+        // Check whether the device has a fingerprint sensor
+        if(!fingerprintManager.isHardwareDetected()){
+            textView.setText("Your Device does not have a Fingerprint Sensor");
         } else {
-            Toast.makeText(getApplicationContext(), "Bluetooth paired devices not found", Toast.LENGTH_LONG).show();
+            // Checks whether fingerprint permission is set on manifest
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                textView.setText("Fingerprint authentication permission not enabled");
+            } else {
+                // Check whether at least one fingerprint is registered
+                if (!fingerprintManager.hasEnrolledFingerprints()) {
+                    textView.setText("Register at least one fingerprint in Settings");
+                } else {
+                    // Checks whether lock screen security is enabled or not
+                    if (!keyguardManager.isKeyguardSecure()) {
+                        textView.setText("Lock screen security not enabled in Settings");
+                    } else {
+                        generateKey();
+                        if (cipherInit()) {
+                            String address = myBluetooth.getBondedDevices().iterator().next().getAddress();
+                            FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
+                            FingerprintHandler helper = new FingerprintHandler(this, address);
+                            helper.startAuth(fingerprintManager, cryptoObject);
+                        }
+                    }
+                }
+            }
         }
-
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        deviceList.setAdapter(adapter);
-        deviceList.setOnItemClickListener(myListClickListener);
     }
 
-    private final AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String info = ((TextView) view).getText().toString();
-            String address = info.substring(info.length()-17);
-
-            Intent i = new Intent(MainActivity.this, DeviceActivity.class);
-            i.putExtra(EXTRA_ADDRESS, address);
-            startActivity(i);
+    private void generateKey() {
+        try {
+            keyStore = KeyStore.getInstance("AndroidKeyStore");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    };
+
+        KeyGenerator keyGenerator;
+        try {
+            keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+            throw new RuntimeException("Failed to get KeyGenerator instance", e);
+        }
+
+        try {
+            keyStore.load(null);
+            keyGenerator.init(new
+                    KeyGenParameterSpec.Builder(KEY_NAME,KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    .setUserAuthenticationRequired(true)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                    .build());
+            keyGenerator.generateKey();
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | CertificateException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean cipherInit() {
+        try {
+            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            throw new RuntimeException("Failed to get Cipher", e);
+        }
+
+        try {
+            keyStore.load(null);
+            SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME,null);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return true;
+        } catch (KeyPermanentlyInvalidatedException e) {
+            return false;
+        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException("Failed to init Cipher", e);
+        }
+    }
 }
