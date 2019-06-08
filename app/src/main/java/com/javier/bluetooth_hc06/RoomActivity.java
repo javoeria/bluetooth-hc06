@@ -92,7 +92,7 @@ public class RoomActivity extends AppCompatActivity {
                 btSocket.getOutputStream().write(message.getBytes());
             } catch (IOException e) {
                 Log.d("Main", "IOException: " + e.getMessage());
-                msg("Error");
+                msg("Signal Error");
             }
         }
         //reload();
@@ -144,7 +144,7 @@ public class RoomActivity extends AppCompatActivity {
             case R.id.refresh_menu:
                 try {
                     btSocket.getOutputStream().write(hmac("00").getBytes());
-                    msg("Refresh");
+                    msg("Refresh Data");
                 } catch (IOException e) {
                     Log.d("Main", "IOException: " + e.getMessage());
                 }

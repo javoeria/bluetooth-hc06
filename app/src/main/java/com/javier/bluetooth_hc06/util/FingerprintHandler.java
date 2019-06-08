@@ -59,7 +59,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
         Intent i = new Intent(context, DeviceActivity.class);
         i.putExtra(EXTRA_ADDRESS, address);
         context.startActivity(i);
-        //((Activity)context).recreate();
+        ((Activity)context).recreate();
     }
 
     private void update(String e, Boolean success){

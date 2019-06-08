@@ -67,13 +67,13 @@ public class MyHandler extends Handler {
                         new BigQueryTask(parent.getApplicationContext()).execute(rows);
                         count = 0;
                         rows = "";
-                        msg("Updated");
+                        //msg("Updated");
                     } else {
                         rows += RoomSingleton.getInstance().getJSON(letter) + "\r\n";
                     }
                 } catch (Throwable t) {
                     Log.d("Main", "Throwable: " + t.getMessage());
-                    msg("Error");
+                    msg("Upload Error");
                 }
                 break;
             case UPDATE_A:

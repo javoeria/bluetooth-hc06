@@ -72,7 +72,7 @@ public class DeviceActivity extends AppCompatActivity {
                                 btSocket.close();
                             } catch(IOException e) {
                                 Log.d("Main", "IOException: " + e.getMessage());
-                                msg("Error");
+                                //msg("Error");
                             }
                         }
                         msg("Disconnected");
